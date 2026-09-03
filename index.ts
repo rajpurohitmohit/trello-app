@@ -2,8 +2,12 @@ import express from "express";
 import {db} from "./prisma/db";
 import bcrypt from "bcrypt";
 import "dotenv/config";
+const PORT = 3000;
 
 const app = express();
+await db.connect({ url: process.env.DATABASE_URL! })
+
+app.use(express.json());
 
 app.post("/signup", async (req, res) => {
     const username = req.body.username;
@@ -13,6 +17,7 @@ app.post("/signup", async (req, res) => {
         res.status(403).json({
             message: "Fields can't be empty",
         })
+        return
     }
 
     const userFound = await db.orm.public.Users
@@ -20,11 +25,13 @@ app.post("/signup", async (req, res) => {
     .where({
         username: username
     })
+    .first();
 
     if(userFound){
         res.status(403).json({
             message: "User already exists"
         })
+        return
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -36,7 +43,10 @@ app.post("/signup", async (req, res) => {
     })
 
     res.json({
-        id: createUser.userId,
+        id: createUser.user_id,
         message: "User Created Successfully",
     })
 })
+
+app.listen(PORT);
+console.log("Running on port: ", PORT);

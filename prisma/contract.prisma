@@ -2,8 +2,8 @@
 // Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 
 model Users {
-  userId   Int          @id(map: "users_pkey") @default(autoincrement()) @map("user_id")
-  username VarChar(50)  @unique(map: "users_username_key")
+  user_id   Int        @id @default(autoincrement())
+  username VarChar(50)  @unique
   password VarChar(255)
 
   @@map("users")
