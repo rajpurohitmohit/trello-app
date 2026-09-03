@@ -5,7 +5,7 @@ async function main() {
   const runtime = await db.connect({ url: process.env.DATABASE_URL! });
 
   const users = await db.orm.public.Users
-    .select("userId", "username" ,"password" )
+    .select("user_id", "username" ,"password" )
     .all();
 
   console.log(users);
